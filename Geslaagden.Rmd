@@ -1,0 +1,46 @@
+---
+title: "Geslaagden, gezakten en gemiddelde examencijfers per instelling"
+subtitle: "R notebook"
+output: html_notebook
+---
+
+# De data
+
+Afkomstig van:  
+https://duo.nl/open_onderwijsdata/databestanden/vo/leerlingen/leerlingen-vo-7.jsp
+
+Voor het gemak lokaal opgeslagen
+
+```{r}
+# run deze chunk om de data lokaal in te lezen
+# en de data wrangling te doen
+
+library(tidyverse)
+
+dGeslaagd <- list.files(path = "data",
+                        pattern = "csv",
+                        full.names = TRUE) %>%
+  set_names() %>% 
+  map_dfr(.f = read_csv2,
+          .id = "bestandsnaam") %>%
+  mutate(studiejaar = str_sub(bestandsnaam, start = 40, end = 48))
+
+
+```
+
+# Een basisplaatje
+
+```{r, fig.height = 2, fig.width = 8}
+dCompact <- dGeslaagd %>%
+  count(studiejaar, wt = GESLAAGDEN, name = "Geslaagd")
+
+ggplot(data = dCompact,
+       aes(x = studiejaar, y = Geslaagd)) +
+  geom_bar(stat = "identity")
+```
+# Een ander inzicht
+
+```{r}
+
+```
+

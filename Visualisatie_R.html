@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Visualisaties in R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Martine Jansen | Fontys" />
+    <meta name="author" content="Veerle van Son | Avans" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <link href="libs/xaringanExtra-extra-styles/xaringanExtra-extra-styles.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-webcam/webcam.js"></script>
+    <script id="xaringanExtra-webcam-options" type="application/json">{"width":"200","height":"200","margin":"1em"}</script>
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Visualisaties in R
+## Workshop DAIR seminar
+### Martine Jansen | Fontys
+### Veerle van Son | Avans
+### woensdag 10 november, 2021
+
+---
+
+
+
+
+
+
+
+<div>
+<style type="text/css">.xaringan-extra-logo {
+width: 70px;
+height: 128px;
+z-index: 0;
+background-image: url(logo.png);
+background-size: contain;
+background-repeat: no-repeat;
+position: absolute;
+top:1em;right:1em;
+}
+</style>
+<script>(function () {
+  let tries = 0
+  function addLogo () {
+    if (typeof slideshow === 'undefined') {
+      tries += 1
+      if (tries < 10) {
+        setTimeout(addLogo, 100)
+      }
+    } else {
+      document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide_logo)')
+        .forEach(function (slide) {
+          const logo = document.createElement('div')
+          logo.classList = 'xaringan-extra-logo'
+          logo.href = null
+          slide.appendChild(logo)
+        })
+    }
+  }
+  document.addEventListener('DOMContentLoaded', addLogo)
+})()</script>
+</div>
+
+## Wat gaan we doen
+
+*  Korte presentatie: Tidy Tuesday
+*  Compacte uitleg: (gg)plots in R
+*  Zelf: aan de slag met een dataset
+
+
+---
+
+## Tidy Tuesday
+
+&lt;img src="tidytuesday/tidytuesday_logo.png" title="Logo TidyTuesday, a weekly data project in R from the R4DS online learning community" alt="Logo TidyTuesday, a weekly data project in R from the R4DS online learning community" width="455" /&gt;
+
+
+
+
+*  Sinds 1 april 2018
+*  "safe and supportive forum for individuals to practice their wrangling and data visualization skills independent of drawing conclusions"
+*  Elke week een ruwe dataset en artikel
+*  Exploreer de data en visualiseer
+*  Deel plaatje en code
+*  16273 tweets door 3510 personen
+*  Lees meer op: https://github.com/rfordatascience/tidytuesday
+*  en #tidytuesday op twitter
+
+---
+
+## Voorbeeld Tidy Tuesday
+
+* 17 augustus 2021
+* Voice Interaction Computer Star Trek
+* Data set met 2214 regels en 14 kolommen
+
+---
+
+## TT Voice Interaction Computer Star Trek 1/2
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; variable &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; class &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; description &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; name &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ID name &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; char &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The name of the speaking character &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; line &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The complete line of dialog (may contain more speech than the speech interaction). Parentheticals are directions and not spoken. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; direction &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Stage directions as written in the episode script &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; type &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The type of interaction, see detailed definitions below &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; pri_type &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The primary interaction type as defined by the below ranking &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; domain &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The domain of interaction, see detailed definitions below &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; sub_domain &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The sub-domain of interaction, generally a specific setting, see below &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; nv_resp &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; logical &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; On a person's line when the computer completes the query but without speaking a response. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; interaction &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The actual speech interaction. May be shorter or longer than the line of dialog &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; char_type &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Either Person or Computer &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; is_fed &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; logical &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Indicates whether an interaction is with the standard Enterprise system (true) or another (false) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; error &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; logical &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The interaction resulted in an error &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; value_id &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; character &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Value ID &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+## TT Voice Interaction Computer Star Trek 2/2
+
+.panelset[
+.panel[.panel-name[Oliveira]
+&lt;img src="tidytuesday/E9QDqDCXoAg4aqN.png" width="60%" /&gt;
+
+https://twitter.com/maxwelco/status/1428771293642608643
+
+]
+.panel[.panel-name[Eilerts]
+&lt;img src="tidytuesday/E9C4TMMVIAM02ra.jpg" width="60%" /&gt;
+
+https://twitter.com/DianeEilerts/status/1427847269127131138
+
+]
+.panel[.panel-name[Rennie]
+&lt;img src="tidytuesday/E9kIF_HXoAY3mpV.jpg" width="30%" /&gt;
+
+https://twitter.com/nrennie35/status/1430183369304940549
+
+]
+.panel[.panel-name[Hudson]
+&lt;img src="tidytuesday/E9MH81_XMAED0dx.jpg" width="60%" /&gt;
+
+https://twitter.com/Jamie_Bio/status/1428494523487952897
+
+]
+.panel[.panel-name[Gephard]
+&lt;img src="tidytuesday/E9gOqqQXsAkmfCO.png" width="60%" /&gt;
+
+https://twitter.com/c_gebhard/status/1429909416346804226
+
+]
+
+
+]
+
+---
+
+## `ggplot`'s anatomie  
+
+.panelset[
+.panel[.panel-name[Gebhard met annotatie]
+&lt;img src="tidytuesday/ggplot_annotatie.png" width="70%" /&gt;
+
+]
+.panel[.panel-name[mogelijke code ]
+
+
+```r
+ggplot(data = dStartrek,
+       aes(x = searching,
+           y = searched)) +
+   geom_label_repel(aes(label = char)) +
+   labs( title = "Where is Captain Picard?",
+         subtitle = "How often did...",
+         x = "Times searching someone",
+         y = "Times being searched",
+         caption = "@c_gebhard ...")
+```
+
+]
+
+.panel[.panel-name[Eilerts met annotatie]
+&lt;img src="tidytuesday/ggplot_annotatie2.png" width="60%" /&gt;
+
+]
+.panel[.panel-name[mogelijke code ]
+
+
+```r
+library(trekfont)   # Star Trek fonts
+library(rtrek)      # datasets Star Trek Universe
+library(patchwork)  # plots combineren
+
+pMain &lt;- ggplot(data = dStartrek,
+                aes(x = interaction_type,
+                    fill = char)) +
+   geom_bar()) +
+   labs( title = "Computer Interactions",
+         x = "Primary Interaction Type",
+         y = "Frequency",
+         fill = "Character") +
+   annotate("text", x = 5, y= 450, label = "NX", family = "TNGcast")
+
+pLB &lt;- ma_image(...)
+pLO &lt;- ma_image(...)
+
+(plB / pLO) + pMain
+```
+
+]
+
+]
+
+---
+
+## Verschillende soorten visualisaties in R
+
+https://www.r-graph-gallery.com/
+
+---
+
+## De data die wij gaan visualiseren
+
+*  Afkomstig van DUO
+*  107522 regels met 17 variabelen
+*  per vo-school, per jaar, en per profiel:
+  *  het aantal examenkandidaten
+  *  het aantal geslaagden
+  *  het aantal gezakten
+  *  gemiddeld cijfer op lijst
+  *  gemiddeld cijfer schoolexamen
+  *  gemiddeld cijfer centraal examen
+
+---
+
+## Aan de slag
+
+*  Ga naar https://github.com/MMJansen/DAIR2021
+*  Klik op de groen knop "Code", en kies Download Zip
+*  Unzip het bestand
+
+De volgende stappen veronderstellen de aanwezigheid van R en RStudio:
+
+*  Vanuit de verkenner, dubbelklik `DAIRpres.Rproj`
+*  Vanuit het files overzicht rechtsonder in RStudio, dubbelklik `Geslaagden.Rmd`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
